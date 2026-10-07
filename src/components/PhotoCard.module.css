@@ -1,0 +1,11 @@
+.card { break-inside: avoid; display: inline-block; width: 100%; margin-bottom: clamp(27px, 3vw, 44px); animation: appear 550ms both; }
+.imageLink { position: relative; display: block; overflow: hidden; background: #e3e6dd; }
+.imageLink img { width: 100%; height: auto; transition: transform 600ms cubic-bezier(.22, 1, .36, 1), filter 400ms ease; }
+.imageLink:hover img { transform: scale(1.035); filter: brightness(.85); }
+.viewPhoto { position: absolute; right: 14px; bottom: 14px; display: flex; align-items: center; gap: 16px; padding: 12px 15px; background: var(--accent); font-size: 12px; font-weight: 700; opacity: 0; transform: translateY(6px); transition: opacity 250ms ease, transform 250ms ease; }
+.viewPhoto span { font-size: 16px; }
+.imageLink:hover .viewPhoto, .imageLink:focus-visible .viewPhoto { opacity: 1; transform: translateY(0); }
+.cardMeta { display: flex; align-items: baseline; gap: 12px; padding-top: 11px; }
+.cardNumber { color: #899086; font-size: 11px; font-weight: 700; }
+@keyframes appear { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@media (hover: none) { .viewPhoto { opacity: 1; transform: none; } }

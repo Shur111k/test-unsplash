@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Photo Gallery",
-  description: "Навчальна галерея фотографій",
+  title: "MIRA — Візуальний щоденник",
+  description: "Авторська галерея фотографій. Щоденна добірка світлин від авторів з усього світу.",
 };
 
 export default function RootLayout({
