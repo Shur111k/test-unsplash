@@ -1,0 +1,37 @@
+:root {
+  color-scheme: light;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #17211d;
+  background: #f8faf8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+}
+
+.site-container {
+  width: min(calc(100% - 2rem), 80rem);
+  margin-inline: auto;
+  padding-block: clamp(4rem, 12vw, 8rem);
+}
+
+h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(2rem, 6vw, 4rem);
+  line-height: 1.1;
+}
+
+p {
+  max-width: 45rem;
+  margin: 0;
+  line-height: 1.6;
+}
