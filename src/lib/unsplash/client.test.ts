@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { normalizePhoto } from "../photos";
 import { createUnsplashClient, UnsplashApiError } from "./client";
+import { normalizePhoto } from "./mapper";
 
 const photoPayload = {
   id: "photo-1",
@@ -94,6 +94,7 @@ describe("Unsplash client", () => {
       "Accept-Version": "v1",
     });
     expect(init?.next?.revalidate).toBe(300);
+    expect(init?.signal).toBeInstanceOf(AbortSignal);
     expect(result).toMatchObject({
       page: 1,
       perPage: 30,

@@ -23,6 +23,7 @@ export function PhotoDetails({ photo, preview, columns }: PhotoDetailsProps) {
           href={photo.photoUrl}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Переглянути фото на Unsplash, нова вкладка"
         >
           Переглянути на Unsplash ↗
         </a>
@@ -32,7 +33,12 @@ export function PhotoDetails({ photo, preview, columns }: PhotoDetailsProps) {
           <div>
             <dt>Фотограф</dt>
             <dd>
-              <a href={photo.author.profileUrl} target="_blank" rel="noopener noreferrer">
+              <a
+                href={photo.author.profileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Автор ${photo.author.name} на Unsplash, нова вкладка`}
+              >
                 {photo.author.name} ↗
               </a>
             </dd>

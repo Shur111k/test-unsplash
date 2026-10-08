@@ -1,0 +1,104 @@
+.form {
+  width: 100%;
+}
+
+.label {
+  display: block;
+  margin-bottom: 13px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 78px;
+  padding: 8px 9px 8px 24px;
+  border: 1px solid var(--ink);
+  border-radius: 50px;
+  background: #fffef9;
+  box-shadow: 0 14px 40px rgb(35 45 22 / 8%);
+  transition:
+    box-shadow 220ms ease,
+    transform 220ms ease;
+}
+
+.field:focus-within {
+  outline: 3px solid #698800;
+  outline-offset: 3px;
+  box-shadow:
+    0 0 0 5px rgb(216 241 107 / 32%),
+    0 18px 45px rgb(35 45 22 / 12%);
+  transform: translateY(-2px);
+}
+
+.symbol {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.field input[type="search"] {
+  flex: 1;
+  width: 0;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: clamp(14px, 1.5vw, 18px);
+}
+
+.field input::placeholder {
+  color: #5b6358;
+  opacity: 1;
+}
+
+.field button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 27px;
+  min-height: 58px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: 40px;
+  background: var(--ink);
+  color: var(--paper);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  transition:
+    background 200ms ease,
+    color 200ms ease;
+}
+
+.field button:hover {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+.field button span {
+  font-size: 20px;
+}
+
+@media (max-width: 600px) {
+  .field {
+    gap: 9px;
+    min-height: 64px;
+    padding: 6px 6px 6px 17px;
+  }
+
+  .symbol {
+    font-size: 25px;
+  }
+
+  .field button {
+    gap: 7px;
+    min-height: 50px;
+    padding: 0 14px;
+  }
+}

@@ -3,10 +3,12 @@ import {
   galleryPageHref,
   parseGalleryColumns,
   parseGalleryPage,
+  parseSearchTerm,
   safeGalleryReturnHref,
+  searchGalleryHref,
   tagGalleryPath,
 } from "./gallery-navigation";
-import { getPreviewPhotoPage } from "./preview-photos";
+import { getPreviewPhotoPage, getPreviewSearchPage } from "./preview-photos";
 
 describe("gallery URL state", () => {
   it("accepts only a single positive safe page number", () => {
@@ -20,6 +22,12 @@ describe("gallery URL state", () => {
     expect(parseGalleryColumns("5")).toBe(5);
     expect(parseGalleryColumns("3")).toBe(3);
     expect(parseGalleryColumns("7")).toBe(3);
+  });
+
+  it("normalizes a single search term", () => {
+    expect(parseSearchTerm("  нічне місто  ")).toBe("нічне місто");
+    expect(parseSearchTerm("a".repeat(121))).toHaveLength(120);
+    expect(parseSearchTerm(["one", "two"])).toBe("");
   });
 
   it("keeps layout and preview state in page links", () => {
@@ -45,6 +53,18 @@ describe("gallery URL state", () => {
     const href = galleryPageHref(2, 5, true, pathname);
     expect(safeGalleryReturnHref(href, true)).toBe(href);
     expect(safeGalleryReturnHref(href, false)).toBe(galleryPageHref(2, 5, false, pathname));
+  });
+
+  it("preserves search context in result, pagination and photo return links", () => {
+    const href = searchGalleryHref("світло & тіні", 2, 5, true);
+    expect(href).toBe(
+      "/search?page=2&cols=5&preview=1&q=%D1%81%D0%B2%D1%96%D1%82%D0%BB%D0%BE+%26+%D1%82%D1%96%D0%BD%D1%96#gallery",
+    );
+    expect(safeGalleryReturnHref(href, true)).toBe(href);
+    expect(safeGalleryReturnHref(href, false)).toBe(
+      searchGalleryHref("світло & тіні", 2, 5, false),
+    );
+    expect(safeGalleryReturnHref("/search?q=%20%20", true)).toBe(galleryPageHref(1, 3, true));
   });
 
   it("rejects external, malformed and unrelated return destinations", () => {
@@ -80,5 +100,15 @@ describe("gallery URL state", () => {
       hasNextPage: false,
     });
     expect(getPreviewPhotoPage(99, "abstract").photos).toEqual([]);
+  });
+
+  it("filters local search results before paginating", () => {
+    const first = getPreviewSearchPage(1, " ABSTRACT ");
+    const second = getPreviewSearchPage(2, "abstract");
+    expect(first.total).toBe(23);
+    expect(first.photos).toHaveLength(12);
+    expect(second.photos).toHaveLength(11);
+    expect(getPreviewSearchPage(1, "макет").total).toBe(24);
+    expect(getPreviewSearchPage(1, "невідоме").photos).toEqual([]);
   });
 });

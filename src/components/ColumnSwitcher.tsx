@@ -1,3 +1,4 @@
+import * as m from "motion/react-m";
 import type { GalleryColumns } from "@/lib/gallery-navigation";
 import styles from "./ColumnSwitcher.module.css";
 
@@ -37,4 +38,3 @@ export function ColumnSwitcher({
     </div>
   );
 }
-import * as m from "motion/react-m";

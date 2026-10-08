@@ -1,5 +1,13 @@
 .card {
   width: 100%;
+  transition: transform 250ms ease;
+}
+
+@media (hover: hover) {
+  .card:hover,
+  .card:focus-within {
+    transform: translateY(-4px);
+  }
 }
 
 .imageLink {

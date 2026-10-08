@@ -11,6 +11,7 @@ export function SiteShell({
 }) {
   const homeHref = preview ? "/?preview=1" : "/";
   const galleryHref = preview ? "/?preview=1#gallery" : "/#gallery";
+  const searchHref = preview ? "/search?preview=1" : "/search";
   return (
     <div className={styles.shell}>
       <a className={styles.skipLink} href="#main-content">
@@ -27,15 +28,33 @@ export function SiteShell({
             mira<span aria-hidden="true">✳</span>
           </Link>
           <span className={styles.headerCaption}>Галерея для уважного погляду</span>
-          <Link className={styles.headerLink} href={galleryHref} prefetch={false}>
-            Колекція <span aria-hidden="true">↗</span>
-          </Link>
+          <nav className={styles.headerNav} aria-label="Основна навігація">
+            <Link
+              className={styles.searchLink}
+              href={searchHref}
+              prefetch={false}
+              aria-label="Пошук фото"
+            >
+              <span className={styles.searchIcon} aria-hidden="true">
+                ⌕
+              </span>
+              <span className={styles.searchText}>Пошук</span>
+            </Link>
+            <Link className={styles.headerLink} href={galleryHref} prefetch={false}>
+              Колекція <span aria-hidden="true">↗</span>
+            </Link>
+          </nav>
         </div>
       </header>
       {children}
       <footer className={styles.footer}>
         <div className={`site-container ${styles.footerInner}`}>
-          <Link className={styles.footerLogo} href={homeHref} prefetch={false}>
+          <Link
+            className={styles.footerLogo}
+            href={homeHref}
+            prefetch={false}
+            aria-label="MIRA — головна сторінка"
+          >
             mira✳
           </Link>
           <p>Зупиніться на мить. Подивіться ближче.</p>

@@ -55,6 +55,23 @@ export function getPreviewPhotoPage(page: number, tag?: string): PhotoPage {
       : previewPhotos.filter((photo) =>
           photo.tags.some((item) => item.toLowerCase() === tag.trim().toLowerCase()),
         );
+  return paginatePreviewPhotos(photos, page);
+}
+
+export function getPreviewSearchPage(page: number, query: string): PhotoPage {
+  const term = query.trim().toLowerCase();
+  const photos = term
+    ? previewPhotos.filter((photo) =>
+        [photo.alt, photo.description ?? "", ...photo.tags].some((value) =>
+          value.toLowerCase().includes(term),
+        ),
+      )
+    : [];
+
+  return paginatePreviewPhotos(photos, page);
+}
+
+function paginatePreviewPhotos(photos: Photo[], page: number): PhotoPage {
   const perPage = 12;
   const totalPages = Math.ceil(photos.length / perPage);
 

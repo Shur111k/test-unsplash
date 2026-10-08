@@ -24,7 +24,10 @@ interface TagPageProps {
 
 export async function generateMetadata({ params }: TagPageProps): Promise<Metadata> {
   const { tag } = await params;
-  return { title: `${tag.trim()} — MIRA` };
+  return {
+    title: `${tag.trim()} — MIRA`,
+    description: `Фотографії за темою «${tag.trim()}» у галереї MIRA.`,
+  };
 }
 
 export default async function TagPage({ params, searchParams }: TagPageProps) {
@@ -46,7 +49,7 @@ export default async function TagPage({ params, searchParams }: TagPageProps) {
 
   return (
     <SiteShell preview={preview}>
-      <main id="main-content" className={`site-container ${styles.main}`}>
+      <main id="main-content" tabIndex={-1} className={`site-container ${styles.main}`}>
         <Link className={styles.back} href={galleryPageHref(1, columns, preview)} prefetch={false}>
           ← До колекції
         </Link>

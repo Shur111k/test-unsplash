@@ -32,7 +32,15 @@ export function GalleryHero({ photos }: { photos: Photo[] }) {
           </p>
         </div>
       </div>
-      <HeroCollage photos={photos.slice(0, 3)} />
+      <HeroCollage
+        photos={photos.slice(0, 3).map(({ id, urls, color, width, height }) => ({
+          id,
+          imageUrl: urls.small,
+          color,
+          width,
+          height,
+        }))}
+      />
       <div className={styles.baseline} aria-hidden="true">
         <span>AN INDEPENDENT VISUAL JOURNAL</span>
         <span>SCROLL TO EXPLORE ↓</span>

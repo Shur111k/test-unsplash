@@ -3,10 +3,15 @@
 import * as m from "motion/react-m";
 import { useReducedMotion, useSpring } from "motion/react";
 import type { PointerEvent } from "react";
-import type { Photo } from "@/lib/photos";
 import styles from "./HeroCollage.module.css";
 
-type CollagePhoto = Pick<Photo, "id" | "urls" | "color" | "width" | "height">;
+interface CollagePhoto {
+  id: string;
+  imageUrl: string;
+  color: string | null;
+  width: number;
+  height: number;
+}
 
 interface HeroCollageProps {
   photos: CollagePhoto[];
@@ -54,7 +59,7 @@ export function HeroCollage({ photos }: HeroCollageProps) {
             {/* Reuse the gallery's direct CDN URLs without another API request. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={photo.urls.small}
+              src={photo.imageUrl}
               width={photo.width}
               height={photo.height}
               alt=""

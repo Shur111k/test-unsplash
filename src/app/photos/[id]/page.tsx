@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { Attribution } from "@/components/Attribution";
 import { PhotoDetails } from "@/components/PhotoDetails";
+import { RetryButton } from "@/components/RetryButton";
 import { SiteShell } from "@/components/SiteShell";
 import {
   parseGalleryColumns,
@@ -15,19 +16,39 @@ import { photoErrorMessage } from "@/lib/unsplash/error-message";
 import { getPhotoById } from "@/lib/unsplash/server";
 import styles from "./page.module.css";
 
-export const metadata: Metadata = { title: "Фото — MIRA" };
-
-export default async function PhotoPage({
-  params,
-  searchParams,
-}: {
+interface PhotoPageProps {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ from?: QueryValue; preview?: QueryValue }>;
-}) {
+}
+
+function isPreviewPhoto(id: string, preview: QueryValue): boolean {
+  return process.env.NODE_ENV === "development" && (id.startsWith("preview-") || preview === "1");
+}
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: PhotoPageProps): Promise<Metadata> {
+  const [{ id }, query] = await Promise.all([params, searchParams]);
+  const preview = isPreviewPhoto(id, query.preview);
+
+  try {
+    const photo = preview ? previewPhotos.find((item) => item.id === id) : await getPhotoById(id);
+    if (!photo) return { title: "Фото не знайдено — MIRA", robots: { index: false } };
+
+    return {
+      title: `${photo.alt} — MIRA`,
+      description: photo.description ?? photo.alt,
+    };
+  } catch {
+    return { title: "Фото — MIRA" };
+  }
+}
+
+export default async function PhotoPage({ params, searchParams }: PhotoPageProps) {
   await connection();
   const [{ id }, query] = await Promise.all([params, searchParams]);
-  const isPreview =
-    process.env.NODE_ENV === "development" && (id.startsWith("preview-") || query.preview === "1");
+  const isPreview = isPreviewPhoto(id, query.preview);
   const backHref = safeGalleryReturnHref(query.from, isPreview);
   const columns = parseGalleryColumns(
     new URL(backHref, "https://mira.local").searchParams.get("cols") ?? undefined,
@@ -39,13 +60,16 @@ export default async function PhotoPage({
   } catch (error) {
     return (
       <SiteShell preview={isPreview}>
-        <main id="main-content" className={`site-container ${styles.message}`}>
+        <main id="main-content" tabIndex={-1} className={`site-container ${styles.message}`}>
           <p className={styles.kicker}>MIRA / Фото</p>
           <h1>Не вдалося завантажити фото.</h1>
           <p role="alert">{photoErrorMessage(error)}</p>
-          <Link href={backHref} prefetch={false}>
-            ← До галереї
-          </Link>
+          <div className={styles.messageActions}>
+            <RetryButton />
+            <Link href={backHref} prefetch={false}>
+              ← До галереї
+            </Link>
+          </div>
         </main>
       </SiteShell>
     );
@@ -55,7 +79,7 @@ export default async function PhotoPage({
 
   return (
     <SiteShell preview={isPreview}>
-      <main id="main-content" className={`site-container ${styles.detail}`}>
+      <main id="main-content" tabIndex={-1} className={`site-container ${styles.detail}`}>
         <Link className={styles.back} href={backHref} prefetch={false}>
           ← До галереї
         </Link>

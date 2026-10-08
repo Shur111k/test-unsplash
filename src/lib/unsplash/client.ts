@@ -1,9 +1,11 @@
-import { normalizePhoto, type Photo, type PhotoPage } from "../photos";
+import type { Photo, PhotoPage } from "../photos";
+import { normalizePhoto } from "./mapper";
 import type { UnsplashSearchPayload } from "./types";
 
 const API_ORIGIN = "https://api.unsplash.com";
 const DEFAULT_PAGE_SIZE = 24;
 const MAX_PAGE_SIZE = 30;
+const REQUEST_TIMEOUT_MS = 10_000;
 
 type FetchOptions = RequestInit & { next?: { revalidate: number } };
 type Fetcher = (input: string | URL, init?: FetchOptions) => Promise<Response>;
@@ -99,6 +101,7 @@ export function createUnsplashClient(accessKey: string, fetcher: Fetcher = fetch
           Authorization: `Client-ID ${key}`,
           "Accept-Version": "v1",
         },
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
         next: { revalidate },
       });
     } catch {

@@ -1,5 +1,6 @@
 import "server-only";
 
+import { cache } from "react";
 import { createUnsplashClient } from "./client";
 
 function getClient() {
@@ -10,9 +11,9 @@ export async function listEditorialPhotos(page = 1, perPage = 24) {
   return getClient().listPhotos(page, perPage);
 }
 
-export async function getPhotoById(id: string) {
+export const getPhotoById = cache(async (id: string) => {
   return getClient().getPhoto(id);
-}
+});
 
 export async function searchPhotosByQuery(query: string, page = 1, perPage = 24) {
   return getClient().searchPhotos(query, page, perPage);

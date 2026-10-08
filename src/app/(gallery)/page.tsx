@@ -41,7 +41,7 @@ export default async function HomePage({
 
   return (
     <SiteShell preview={isPreview}>
-      <main id="main-content">
+      <main id="main-content" tabIndex={-1}>
         <GalleryHero photos={photos} />
 
         <section

@@ -18,6 +18,7 @@ interface GalleryLayoutProps {
   hasPreviousPage: boolean;
   preview: boolean;
   pathname?: string;
+  searchQuery?: string;
 }
 
 export function GalleryLayout({
@@ -30,6 +31,7 @@ export function GalleryLayout({
   hasPreviousPage,
   preview,
   pathname = "/",
+  searchQuery,
 }: GalleryLayoutProps) {
   const [columns, setColumns] = useState<GalleryColumns>(initialColumns);
 
@@ -55,7 +57,9 @@ export function GalleryLayout({
           <span className={styles.mobileMode}>Адаптивна сітка</span>
         </div>
       </div>
-      <GalleryNavigationProvider returnHref={galleryPageHref(page, columns, preview, pathname)}>
+      <GalleryNavigationProvider
+        returnHref={galleryPageHref(page, columns, preview, pathname, searchQuery)}
+      >
         {children}
       </GalleryNavigationProvider>
       <div className={styles.collectionEnd}>
@@ -68,7 +72,9 @@ export function GalleryLayout({
         totalPages={totalPages}
         hasNextPage={hasNextPage}
         hasPreviousPage={hasPreviousPage}
-        hrefForPage={(nextPage) => galleryPageHref(nextPage, columns, preview, pathname)}
+        hrefForPage={(nextPage) =>
+          galleryPageHref(nextPage, columns, preview, pathname, searchQuery)
+        }
       />
     </div>
   );

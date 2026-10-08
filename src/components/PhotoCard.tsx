@@ -1,4 +1,3 @@
-import * as m from "motion/react-m";
 import type { Photo } from "@/lib/photos";
 import { Attribution } from "./Attribution";
 import { PhotoLink } from "./PhotoLink";
@@ -6,11 +5,7 @@ import styles from "./PhotoCard.module.css";
 
 export function PhotoCard({ photo, index }: { photo: Photo; index: number }) {
   return (
-    <m.article
-      className={styles.card}
-      whileHover={{ y: -4 }}
-      transition={{ type: "spring", stiffness: 280, damping: 24 }}
-    >
+    <article className={styles.card}>
       <PhotoLink
         className={styles.imageLink}
         id={photo.id}
@@ -39,6 +34,6 @@ export function PhotoCard({ photo, index }: { photo: Photo; index: number }) {
           {String(index + 1).padStart(2, "0")}
         </span>
       </div>
-    </m.article>
+    </article>
   );
 }

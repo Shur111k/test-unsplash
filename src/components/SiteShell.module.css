@@ -48,6 +48,28 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
+.headerNav {
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 3vw, 46px);
+}
+.searchLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 0;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+.searchIcon {
+  font-size: 25px;
+  line-height: 0.8;
+  transition: transform 200ms ease;
+}
+.searchLink:hover .searchIcon {
+  transform: scale(1.2);
+}
 .headerLink {
   display: inline-flex;
   align-items: center;
@@ -89,12 +111,23 @@
 @media (max-width: 640px) {
   .headerInner {
     min-height: 72px;
+    gap: 12px;
   }
   .logo {
     font-size: 32px;
   }
   .headerCaption {
     display: none;
+  }
+  .headerNav {
+    gap: 19px;
+  }
+  .searchText {
+    display: none;
+  }
+  .headerLink {
+    gap: 7px;
+    font-size: 12px;
   }
   .footerInner {
     min-height: 150px;

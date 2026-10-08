@@ -1,0 +1,75 @@
+.main {
+  min-height: 72vh;
+  padding-top: clamp(65px, 8vw, 120px);
+}
+
+.heading {
+  max-width: 650px;
+}
+
+.kicker {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.heading h1 {
+  margin: 23px 0 16px;
+  font-size: clamp(48px, 6vw, 84px);
+  font-weight: 600;
+  letter-spacing: -0.075em;
+  line-height: 1.05;
+}
+
+.heading h1 span {
+  color: #7b9340;
+}
+
+.heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.2fr 0.8fr;
+  gap: 18px;
+  margin-top: 65px;
+}
+
+.grid span {
+  display: block;
+  min-height: clamp(180px, 26vw, 390px);
+  background: linear-gradient(110deg, #e5e8de 20%, #f1f3ec 45%, #e5e8de 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.7s linear infinite;
+}
+
+.grid span:nth-child(2) {
+  min-height: clamp(220px, 32vw, 480px);
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid span:last-child {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid span {
+    animation: none;
+  }
+}

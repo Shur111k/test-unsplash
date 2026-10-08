@@ -1,19 +1,23 @@
 import Link from "next/link";
-import { SiteShell } from "@/components/SiteShell";
-import styles from "./page.module.css";
+import { PageStatus } from "@/components/PageStatus";
 
 export default function PhotoNotFound() {
   const preview = process.env.NODE_ENV === "development";
+
   return (
-    <SiteShell preview={preview}>
-      <main id="main-content" className={`site-container ${styles.message}`}>
-        <p className={styles.kicker}>MIRA / 404</p>
-        <h1>Цей кадр не знайдено.</h1>
-        <p>Можливо, фото видалили або посилання містить помилку.</p>
-        <Link href={preview ? "/?preview=1#gallery" : "/#gallery"} prefetch={false}>
-          ← До галереї
+    <PageStatus
+      kicker="404 / Фото"
+      title="Цей кадр не знайдено."
+      description="Можливо, фото видалили або посилання містить помилку."
+      href="/#gallery"
+      linkLabel={preview ? "До звичайної галереї" : "До галереї"}
+      preview={preview}
+    >
+      {preview && (
+        <Link href="/?preview=1#gallery" prefetch={false}>
+          До локальної галереї
         </Link>
-      </main>
-    </SiteShell>
+      )}
+    </PageStatus>
   );
 }

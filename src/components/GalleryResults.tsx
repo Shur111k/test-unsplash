@@ -4,6 +4,7 @@ import type { PhotoPage } from "@/lib/photos";
 import { GalleryLayout } from "./GalleryLayout";
 import { Pagination } from "./Pagination";
 import { PhotoGrid } from "./PhotoGrid";
+import { RetryButton } from "./RetryButton";
 import styles from "./GalleryResults.module.css";
 
 interface GalleryResultsProps {
@@ -13,6 +14,7 @@ interface GalleryResultsProps {
   columns: GalleryColumns;
   preview: boolean;
   pathname?: string;
+  searchQuery?: string;
 }
 
 export function GalleryResults({
@@ -22,6 +24,7 @@ export function GalleryResults({
   columns,
   preview,
   pathname = "/",
+  searchQuery,
 }: GalleryResultsProps) {
   if (errorMessage) {
     return (
@@ -31,6 +34,7 @@ export function GalleryResults({
         </span>
         <h3>Пауза у стрічці</h3>
         <p>{errorMessage}</p>
+        <RetryButton />
       </div>
     );
   }
@@ -46,10 +50,10 @@ export function GalleryResults({
           <p>
             {page > 1
               ? "Поверніться до початку добірки."
-              : "За цим запитом фотографій поки немає. Спробуйте інший тег або перегляньте головну колекцію."}
+              : "За цим запитом фотографій поки немає. Спробуйте інші слова або перегляньте головну колекцію."}
           </p>
           <Link
-            href={galleryPageHref(1, columns, preview, page > 1 ? pathname : "/")}
+            href={galleryPageHref(1, columns, preview, page > 1 ? pathname : "/", searchQuery)}
             prefetch={false}
           >
             {page > 1 ? "До першої сторінки ↗" : "До колекції ↗"}
@@ -61,7 +65,9 @@ export function GalleryResults({
             totalPages={photoPage.totalPages}
             hasNextPage={photoPage.hasNextPage}
             hasPreviousPage={photoPage.hasPreviousPage}
-            hrefForPage={(nextPage) => galleryPageHref(nextPage, columns, preview, pathname)}
+            hrefForPage={(nextPage) =>
+              galleryPageHref(nextPage, columns, preview, pathname, searchQuery)
+            }
           />
         )}
       </>
@@ -70,7 +76,7 @@ export function GalleryResults({
 
   return (
     <GalleryLayout
-      key={`${pathname}:${page}:${columns}`}
+      key={`${pathname}:${searchQuery ?? ""}:${page}:${columns}`}
       initialColumns={columns}
       page={page}
       photoCount={photoPage.photos.length}
@@ -79,6 +85,7 @@ export function GalleryResults({
       hasPreviousPage={photoPage.hasPreviousPage}
       preview={preview}
       pathname={pathname}
+      searchQuery={searchQuery}
     >
       <PhotoGrid photos={photoPage.photos} />
     </GalleryLayout>
