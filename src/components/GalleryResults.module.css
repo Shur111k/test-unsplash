@@ -1,0 +1,31 @@
+.state {
+  min-height: 350px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  padding: 45px 25px;
+  border: 1px solid var(--line);
+  text-align: center;
+}
+.icon {
+  color: #9bb937;
+  font-size: 45px;
+}
+.state h3 {
+  margin: 8px 0;
+  font-size: 28px;
+  letter-spacing: -0.05em;
+}
+.state p {
+  max-width: 460px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.state a {
+  margin-top: 18px;
+  font-size: 13px;
+  font-weight: 700;
+  text-underline-offset: 4px;
+}

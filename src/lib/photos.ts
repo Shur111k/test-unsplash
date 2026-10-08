@@ -82,7 +82,7 @@ export function normalizePhoto(value: unknown): Photo | null {
     return null;
   }
 
-  const regular = urls ? optionalUrl(urls.regular) ?? optionalUrl(urls.small) : null;
+  const regular = urls ? (optionalUrl(urls.regular) ?? optionalUrl(urls.small)) : null;
   if (!regular || !name || !username) return null;
 
   const userLinks = isRecord(user?.links) ? user.links : null;
@@ -93,11 +93,15 @@ export function normalizePhoto(value: unknown): Photo | null {
   const description = nonEmptyString(payload.description);
   const alt = nonEmptyString(payload.alt_description) ?? description ?? `Фото автора ${name}`;
   const tags = Array.isArray(payload.tags)
-    ? [...new Set(payload.tags.flatMap((tag) => {
-        if (!isRecord(tag)) return [];
-        const title = nonEmptyString(tag.title);
-        return title ? [title] : [];
-      }))]
+    ? [
+        ...new Set(
+          payload.tags.flatMap((tag) => {
+            if (!isRecord(tag)) return [];
+            const title = nonEmptyString(tag.title);
+            return title ? [title] : [];
+          }),
+        ),
+      ]
     : [];
 
   return {
@@ -106,13 +110,15 @@ export function normalizePhoto(value: unknown): Photo | null {
     height: payload.height,
     alt,
     description,
-    color: typeof payload.color === "string" && /^#[\da-f]{6}$/i.test(payload.color)
-      ? payload.color
-      : null,
+    color:
+      typeof payload.color === "string" && /^#[\da-f]{6}$/i.test(payload.color)
+        ? payload.color
+        : null,
     blurHash: nonEmptyString(payload.blur_hash),
-    likes: typeof payload.likes === "number" && Number.isSafeInteger(payload.likes) && payload.likes >= 0
-      ? payload.likes
-      : null,
+    likes:
+      typeof payload.likes === "number" && Number.isSafeInteger(payload.likes) && payload.likes >= 0
+        ? payload.likes
+        : null,
     tags,
     urls: {
       thumb: optionalUrl(urls?.thumb) ?? regular,

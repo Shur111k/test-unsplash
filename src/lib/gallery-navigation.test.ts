@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { galleryPageHref, parseGalleryColumns, parseGalleryPage } from "./gallery-navigation";
+import {
+  galleryPageHref,
+  parseGalleryColumns,
+  parseGalleryPage,
+  safeGalleryReturnHref,
+  tagGalleryPath,
+} from "./gallery-navigation";
 import { getPreviewPhotoPage } from "./preview-photos";
 
 describe("gallery URL state", () => {
@@ -32,5 +38,47 @@ describe("gallery URL state", () => {
     expect(first.hasNextPage).toBe(true);
     expect(second.hasPreviousPage).toBe(true);
     expect(second.hasNextPage).toBe(false);
+  });
+
+  it("keeps encoded tags, pagination and layout in return links", () => {
+    const pathname = tagGalleryPath("світло & тіні");
+    const href = galleryPageHref(2, 5, true, pathname);
+    expect(safeGalleryReturnHref(href, true)).toBe(href);
+    expect(safeGalleryReturnHref(href, false)).toBe(galleryPageHref(2, 5, false, pathname));
+  });
+
+  it("rejects external, malformed and unrelated return destinations", () => {
+    for (const href of [
+      "https://evil.test",
+      "//evil.test",
+      "/\\evil.test",
+      "/photos/id",
+      "/tags/%",
+      "/tags/%20",
+      ["/", "/tags/a"],
+    ]) {
+      expect(safeGalleryReturnHref(href, true)).toBe(galleryPageHref(1, 3, true));
+    }
+    expect(safeGalleryReturnHref("/?page=-2&cols=7&unexpected=value", false)).toBe(
+      galleryPageHref(1, 3, false),
+    );
+  });
+
+  it("filters local tag results before paginating and handles missing tags", () => {
+    const first = getPreviewPhotoPage(1, " ABSTRACT ");
+    const second = getPreviewPhotoPage(2, "abstract");
+    expect(first.total).toBe(23);
+    expect(first.photos).toHaveLength(12);
+    expect(second.photos).toHaveLength(11);
+    expect(second.hasNextPage).toBe(false);
+    expect(
+      [...first.photos, ...second.photos].every((photo) => photo.tags.includes("abstract")),
+    ).toBe(true);
+    expect(getPreviewPhotoPage(1, "missing")).toMatchObject({
+      photos: [],
+      total: 0,
+      hasNextPage: false,
+    });
+    expect(getPreviewPhotoPage(99, "abstract").photos).toEqual([]);
   });
 });

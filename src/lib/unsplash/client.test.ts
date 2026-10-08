@@ -71,13 +71,15 @@ describe("photo normalization", () => {
 
 describe("Unsplash client", () => {
   it("normalizes pagination, reads headers and sends the access key only in a header", async () => {
-    const fetcher = mockFetch(new Response(JSON.stringify([photoPayload]), {
-      headers: {
-        "X-Total": "72",
-        "X-Ratelimit-Remaining": "49",
-        Link: '<https://api.unsplash.com/photos?page=3>; rel="last", <https://api.unsplash.com/photos?page=2>; rel="next"',
-      },
-    }));
+    const fetcher = mockFetch(
+      new Response(JSON.stringify([photoPayload]), {
+        headers: {
+          "X-Total": "72",
+          "X-Ratelimit-Remaining": "49",
+          Link: '<https://api.unsplash.com/photos?page=3>; rel="last", <https://api.unsplash.com/photos?page=2>; rel="next"',
+        },
+      }),
+    );
 
     const result = await createUnsplashClient("test-key", fetcher).listPhotos(0, 50);
     const [input, init] = fetcher.mock.calls[0];
@@ -87,7 +89,10 @@ describe("Unsplash client", () => {
     expect(url.searchParams.get("page")).toBe("1");
     expect(url.searchParams.get("per_page")).toBe("30");
     expect(url.href).not.toContain("test-key");
-    expect(init?.headers).toMatchObject({ Authorization: "Client-ID test-key", "Accept-Version": "v1" });
+    expect(init?.headers).toMatchObject({
+      Authorization: "Client-ID test-key",
+      "Accept-Version": "v1",
+    });
     expect(init?.next?.revalidate).toBe(300);
     expect(result).toMatchObject({
       page: 1,
@@ -102,11 +107,15 @@ describe("Unsplash client", () => {
   });
 
   it("uses search totals and does not call the API for a blank query", async () => {
-    const fetcher = mockFetch(new Response(JSON.stringify({
-      total: 25,
-      total_pages: 2,
-      results: [photoPayload],
-    })));
+    const fetcher = mockFetch(
+      new Response(
+        JSON.stringify({
+          total: 25,
+          total_pages: 2,
+          results: [photoPayload],
+        }),
+      ),
+    );
     const client = createUnsplashClient("test-key", fetcher);
 
     const empty = await client.searchPhotos("   ");
@@ -117,7 +126,13 @@ describe("Unsplash client", () => {
     const url = new URL(fetcher.mock.calls[0][0]);
     expect(url.pathname).toBe("/search/photos");
     expect(url.searchParams.get("query")).toBe("mountain sky");
-    expect(result).toMatchObject({ page: 2, total: 25, totalPages: 2, hasNextPage: false, hasPreviousPage: true });
+    expect(result).toMatchObject({
+      page: 2,
+      total: 25,
+      totalPages: 2,
+      hasNextPage: false,
+      hasPreviousPage: true,
+    });
   });
 
   it("returns null for a missing photo and maps detail fields", async () => {
@@ -150,7 +165,9 @@ describe("Unsplash client", () => {
       kind: "invalid_response",
     });
 
-    const rejected = vi.fn<TestFetcher>(async () => { throw new Error("connection lost"); });
+    const rejected = vi.fn<TestFetcher>(async () => {
+      throw new Error("connection lost");
+    });
     await expect(createUnsplashClient("test-key", rejected).listPhotos()).rejects.toMatchObject({
       kind: "network",
     });

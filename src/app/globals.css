@@ -14,15 +14,38 @@
   -webkit-font-smoothing: antialiased;
 }
 
-* { box-sizing: border-box; }
-html { min-width: 320px; scroll-behavior: smooth; }
-body { min-width: 320px; min-height: 100vh; margin: 0; }
-button, input { font: inherit; }
-a { color: inherit; }
-img { display: block; max-width: 100%; }
-::selection { color: var(--ink); background: var(--accent); }
+* {
+  box-sizing: border-box;
+}
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+}
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+button,
+input {
+  font: inherit;
+}
+a {
+  color: inherit;
+}
+img {
+  display: block;
+  max-width: 100%;
+}
+::selection {
+  color: var(--ink);
+  background: var(--accent);
+}
 
-:focus-visible { outline: 3px solid #698800; outline-offset: 4px; }
+:focus-visible {
+  outline: 3px solid #698800;
+  outline-offset: 4px;
+}
 
 .site-container {
   width: min(calc(100% - clamp(32px, 6vw, 112px)), var(--page-width));
@@ -30,7 +53,9 @@ img { display: block; max-width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;

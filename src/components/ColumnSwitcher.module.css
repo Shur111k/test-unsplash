@@ -1,6 +1,55 @@
-.switcher { display: inline-flex; gap: 3px; padding: 3px; border: 1px solid var(--line); background: #edeee5; }
-.option { min-width: 79px; min-height: 40px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 12px; font-weight: 700; transition: background 180ms ease, color 180ms ease; }
-.option[aria-pressed='true'] { background: var(--ink); color: white; }
-.option:not([aria-pressed='true']):hover { background: #dee4cb; color: var(--ink); }
-.icon { display: flex; align-items: stretch; gap: 2px; width: 18px; height: 15px; }
-.icon > span { flex: 1; border: 1px solid currentColor; }
+.switcher {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  background: #edeee5;
+}
+.selection {
+  position: absolute;
+  z-index: -1;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc((100% - 6px) / 2);
+  border-radius: 24px;
+  background: var(--ink);
+}
+.option {
+  min-width: 70px;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 0;
+  border-radius: 24px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  transition:
+    background 180ms ease,
+    color 180ms ease;
+}
+.option[aria-pressed="true"] {
+  color: white;
+}
+.option:not([aria-pressed="true"]):hover {
+  background: #dee4cb;
+  color: var(--ink);
+}
+.icon {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  width: 18px;
+  height: 15px;
+}
+.icon > span {
+  flex: 1;
+  border: 1px solid currentColor;
+}

@@ -27,28 +27,53 @@ export function Pagination({
   return (
     <nav className={styles.pagination} aria-label="Сторінки галереї">
       {hasPreviousPage ? (
-        <Link className={styles.direction} href={hrefForPage(page - 1)} prefetch={false}>← Назад</Link>
+        <Link className={styles.direction} href={hrefForPage(page - 1)} prefetch={false}>
+          ← Назад
+        </Link>
       ) : (
-        <span className={`${styles.direction} ${styles.disabled}`} aria-disabled="true">← Назад</span>
+        <span className={`${styles.direction} ${styles.disabled}`} aria-disabled="true">
+          ← Назад
+        </span>
       )}
 
       <div className={styles.pages}>
         {pages.map((value, index) => (
           <span className={styles.pageSlot} key={value}>
-            {index > 0 && value - pages[index - 1] > 1 && <span className={styles.ellipsis} aria-hidden="true">…</span>}
+            {index > 0 && value - pages[index - 1] > 1 && (
+              <span className={styles.ellipsis} aria-hidden="true">
+                …
+              </span>
+            )}
             {value === page ? (
-              <span className={styles.current} aria-current="page" aria-label={`Сторінка ${value}, поточна`}>{value}</span>
+              <span
+                className={styles.current}
+                aria-current="page"
+                aria-label={`Сторінка ${value}, поточна`}
+              >
+                {value}
+              </span>
             ) : (
-              <Link className={styles.pageLink} href={hrefForPage(value)} prefetch={false} aria-label={`Сторінка ${value}`}>{value}</Link>
+              <Link
+                className={styles.pageLink}
+                href={hrefForPage(value)}
+                prefetch={false}
+                aria-label={`Сторінка ${value}`}
+              >
+                {value}
+              </Link>
             )}
           </span>
         ))}
       </div>
 
       {hasNextPage ? (
-        <Link className={styles.direction} href={hrefForPage(page + 1)} prefetch={false}>Далі →</Link>
+        <Link className={styles.direction} href={hrefForPage(page + 1)} prefetch={false}>
+          Далі →
+        </Link>
       ) : (
-        <span className={`${styles.direction} ${styles.disabled}`} aria-disabled="true">Далі →</span>
+        <span className={`${styles.direction} ${styles.disabled}`} aria-disabled="true">
+          Далі →
+        </span>
       )}
     </nav>
   );

@@ -1,12 +1,41 @@
 import type { Photo } from "@/lib/photos";
 import styles from "./Attribution.module.css";
 
-export function Attribution({ photo }: { photo: Photo }) {
+export function Attribution({ photo, compact = false }: { photo: Photo; compact?: boolean }) {
+  if (compact) {
+    return (
+      <p className={styles.compact}>
+        <a
+          className={styles.author}
+          href={photo.author.profileUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={`Фото: ${photo.author.name}`}
+        >
+          {photo.author.name}
+        </a>
+        <a
+          className={styles.source}
+          href={photo.photoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Unsplash ↗
+        </a>
+      </p>
+    );
+  }
+
   return (
     <p className={styles.attribution}>
-      Фото: <a href={photo.author.profileUrl} target="_blank" rel="noopener noreferrer">{photo.author.name}</a>
+      Фото:{" "}
+      <a href={photo.author.profileUrl} target="_blank" rel="noopener noreferrer">
+        {photo.author.name}
+      </a>
       <span aria-hidden="true"> / </span>
-      <a href={photo.photoUrl} target="_blank" rel="noopener noreferrer">Unsplash ↗</a>
+      <a href={photo.photoUrl} target="_blank" rel="noopener noreferrer">
+        Unsplash ↗
+      </a>
     </p>
   );
 }

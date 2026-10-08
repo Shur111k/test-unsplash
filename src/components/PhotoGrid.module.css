@@ -1,3 +1,32 @@
-.grid { column-count: var(--gallery-columns, 3); column-gap: clamp(14px, 2vw, 30px); }
-@media (max-width: 1000px) { .grid { columns: 2; } }
-@media (max-width: 620px) { .grid { columns: 1; } }
+.grid {
+  --photo-gap: clamp(12px, 1.7vw, 24px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px var(--photo-gap);
+  align-items: flex-start;
+}
+
+.item {
+  min-width: 0;
+  flex-grow: var(--photo-ratio);
+  flex-shrink: 0;
+  flex-basis: var(--width-3);
+}
+
+:global([data-columns="5"]) .item {
+  flex-basis: var(--width-5);
+}
+
+@media (max-width: 1000px) {
+  .item,
+  :global([data-columns="5"]) .item {
+    flex-basis: var(--width-2);
+  }
+}
+
+@media (max-width: 620px) {
+  .item,
+  :global([data-columns="5"]) .item {
+    flex-basis: 100%;
+  }
+}

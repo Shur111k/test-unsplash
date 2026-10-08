@@ -45,9 +45,10 @@ function nonNegativeInteger(value: unknown): number | null {
 function pagination(page = 1, perPage = DEFAULT_PAGE_SIZE) {
   return {
     page: Number.isSafeInteger(page) && page > 0 ? page : 1,
-    perPage: Number.isSafeInteger(perPage) && perPage > 0
-      ? Math.min(perPage, MAX_PAGE_SIZE)
-      : DEFAULT_PAGE_SIZE,
+    perPage:
+      Number.isSafeInteger(perPage) && perPage > 0
+        ? Math.min(perPage, MAX_PAGE_SIZE)
+        : DEFAULT_PAGE_SIZE,
   };
 }
 
@@ -132,16 +133,17 @@ export function createUnsplashClient(accessKey: string, fetcher: Fetcher = fetch
     const photos = normalizeResults(data);
     const total = nonNegativeInteger(headers.get("X-Total"));
     const link = headers.get("Link");
-    const totalPages = lastPageFromLink(link) ?? (total === null ? null : Math.ceil(total / options.perPage));
+    const totalPages =
+      lastPageFromLink(link) ?? (total === null ? null : Math.ceil(total / options.perPage));
 
     return {
       photos,
       ...options,
       total,
       totalPages,
-      hasNextPage: hasNextLink(link) || (totalPages === null
-        ? data.length === options.perPage
-        : options.page < totalPages),
+      hasNextPage:
+        hasNextLink(link) ||
+        (totalPages === null ? data.length === options.perPage : options.page < totalPages),
       hasPreviousPage: options.page > 1,
       rateLimitRemaining: nonNegativeInteger(headers.get("X-Ratelimit-Remaining")),
     };
@@ -152,7 +154,11 @@ export function createUnsplashClient(accessKey: string, fetcher: Fetcher = fetch
     if (!photoId) return null;
 
     try {
-      const { data } = await request(`/photos/${encodeURIComponent(photoId)}`, new URLSearchParams(), 3600);
+      const { data } = await request(
+        `/photos/${encodeURIComponent(photoId)}`,
+        new URLSearchParams(),
+        3600,
+      );
       const photo = normalizePhoto(data);
       if (!photo) throw new UnsplashApiError("invalid_response", 200);
       return photo;
@@ -162,7 +168,11 @@ export function createUnsplashClient(accessKey: string, fetcher: Fetcher = fetch
     }
   }
 
-  async function searchPhotos(query: string, page = 1, perPage = DEFAULT_PAGE_SIZE): Promise<PhotoPage> {
+  async function searchPhotos(
+    query: string,
+    page = 1,
+    perPage = DEFAULT_PAGE_SIZE,
+  ): Promise<PhotoPage> {
     const options = pagination(page, perPage);
     const term = query.trim();
     if (!term) {
