@@ -1,4 +1,4 @@
-import type { Photo } from "./photos";
+import type { Photo, PhotoPage } from "./photos";
 
 const palettes = [
   ["#c5b8a0", "#5b7159", "#e8d5b1"],
@@ -11,7 +11,7 @@ const palettes = [
 
 const ratios = [[900, 1100], [1000, 720], [840, 1150], [900, 940], [1100, 750], [880, 1100]] as const;
 
-export const previewPhotos: Photo[] = Array.from({ length: 12 }, (_, index) => {
+export const previewPhotos: Photo[] = Array.from({ length: 24 }, (_, index) => {
   const [width, height] = ratios[index % ratios.length];
   const [background, shape, light] = palettes[index % palettes.length];
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}"><rect width="${width}" height="${height}" fill="${background}"/><circle cx="${width * .7}" cy="${height * .3}" r="${width * .32}" fill="${light}"/><path d="M0 ${height * .65} Q${width * .3} ${height * .35} ${width * .6} ${height * .7} T${width} ${height * .6} V${height} H0Z" fill="${shape}"/><path d="M0 ${height * .88} Q${width * .45} ${height * .62} ${width} ${height * .87} V${height} H0Z" fill="${light}" opacity=".65"/></svg>`;
@@ -32,3 +32,19 @@ export const previewPhotos: Photo[] = Array.from({ length: 12 }, (_, index) => {
     author: { name: "Приклад автора", username: "preview", profileUrl: "https://unsplash.com/", avatarUrl: null },
   };
 });
+
+export function getPreviewPhotoPage(page: number): PhotoPage {
+  const perPage = 12;
+  const totalPages = Math.ceil(previewPhotos.length / perPage);
+
+  return {
+    photos: previewPhotos.slice((page - 1) * perPage, page * perPage),
+    page,
+    perPage,
+    total: previewPhotos.length,
+    totalPages,
+    hasNextPage: page < totalPages,
+    hasPreviousPage: page > 1,
+    rateLimitRemaining: null,
+  };
+}

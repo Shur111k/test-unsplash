@@ -1,0 +1,6 @@
+.switcher { display: inline-flex; gap: 3px; padding: 3px; border: 1px solid var(--line); background: #edeee5; }
+.option { min-width: 79px; min-height: 40px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 12px; font-weight: 700; transition: background 180ms ease, color 180ms ease; }
+.option[aria-pressed='true'] { background: var(--ink); color: white; }
+.option:not([aria-pressed='true']):hover { background: #dee4cb; color: var(--ink); }
+.icon { display: flex; align-items: stretch; gap: 2px; width: 18px; height: 15px; }
+.icon > span { flex: 1; border: 1px solid currentColor; }

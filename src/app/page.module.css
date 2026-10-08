@@ -28,6 +28,7 @@
 .stateIcon { color: #9bb937; font-size: 45px; }
 .state h3 { margin: 8px 0; font-size: 28px; letter-spacing: -.05em; }
 .state p { max-width: 460px; margin: 0; color: var(--muted); line-height: 1.6; }
+.stateLink { margin-top: 18px; font-size: 13px; font-weight: 700; text-underline-offset: 4px; }
 @keyframes orbit { to { transform: rotate(360deg); } }
 @media (max-width: 1050px) {
   .hero { min-height: 580px; gap: 1vw; }

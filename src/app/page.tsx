@@ -1,7 +1,12 @@
+import Link from "next/link";
 import { connection } from "next/server";
+import { GalleryLayout } from "@/components/GalleryLayout";
+import { Pagination } from "@/components/Pagination";
 import { PhotoGrid } from "@/components/PhotoGrid";
 import { SiteShell } from "@/components/SiteShell";
-import { previewPhotos } from "@/lib/preview-photos";
+import { galleryPageHref, parseGalleryColumns, parseGalleryPage } from "@/lib/gallery-navigation";
+import type { PhotoPage } from "@/lib/photos";
+import { getPreviewPhotoPage } from "@/lib/preview-photos";
 import { UnsplashApiError } from "@/lib/unsplash/client";
 import { listEditorialPhotos } from "@/lib/unsplash/server";
 import styles from "./page.module.css";
@@ -14,23 +19,31 @@ function galleryErrorMessage(error: unknown) {
   return "Не вдалося завантажити фотографії. Спробуйте оновити сторінку пізніше.";
 }
 
-export default async function HomePage({ searchParams }: { searchParams: Promise<{ preview?: string }> }) {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ preview?: string | string[]; page?: string | string[]; cols?: string | string[] }>;
+}) {
   await connection();
-  const { preview } = await searchParams;
+  const { preview, page: pageParam, cols: columnsParam } = await searchParams;
   const isPreview = process.env.NODE_ENV === "development" && preview === "1";
+  const page = parseGalleryPage(pageParam);
+  const columns = parseGalleryColumns(columnsParam);
 
-  let photos: Awaited<ReturnType<typeof listEditorialPhotos>>["photos"] = [];
+  let photoPage: PhotoPage | null = null;
   let errorMessage: string | null = null;
 
   if (isPreview) {
-    photos = previewPhotos;
+    photoPage = getPreviewPhotoPage(page);
   } else {
     try {
-      photos = (await listEditorialPhotos()).photos;
+      photoPage = await listEditorialPhotos(page);
     } catch (error) {
       errorMessage = galleryErrorMessage(error);
     }
   }
+
+  const photos = photoPage?.photos ?? [];
 
   return (
     <SiteShell preview={isPreview}>
@@ -61,9 +74,35 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           {errorMessage ? (
             <div className={styles.state} role="alert"><span className={styles.stateIcon} aria-hidden="true">✳</span><h3>Пауза у стрічці</h3><p>{errorMessage}</p></div>
           ) : photos.length === 0 ? (
-            <div className={styles.state}><span className={styles.stateIcon} aria-hidden="true">✳</span><h3>Поки тут тихо</h3><p>У добірці ще немає фотографій. Завітайте трохи пізніше.</p></div>
+            <div className={styles.state}>
+              <span className={styles.stateIcon} aria-hidden="true">✳</span>
+              <h3>{page > 1 ? "Ця сторінка порожня" : "Поки тут тихо"}</h3>
+              <p>{page > 1 ? "Спробуйте повернутися до початку добірки." : "У добірці ще немає фотографій. Завітайте трохи пізніше."}</p>
+              {page > 1 && <Link className={styles.stateLink} href={galleryPageHref(1, columns, isPreview)} prefetch={false}>До першої сторінки ↗</Link>}
+            </div>
           ) : (
-            <PhotoGrid photos={photos} />
+            <GalleryLayout
+              key={page}
+              initialColumns={columns}
+              page={page}
+              photoCount={photos.length}
+              totalPages={photoPage?.totalPages ?? null}
+              hasNextPage={photoPage?.hasNextPage ?? false}
+              hasPreviousPage={photoPage?.hasPreviousPage ?? false}
+              preview={isPreview}
+            >
+              <PhotoGrid photos={photos} />
+            </GalleryLayout>
+          )}
+
+          {photoPage && photos.length === 0 && page > 1 && (
+            <Pagination
+              page={page}
+              totalPages={photoPage.totalPages}
+              hasNextPage={photoPage.hasNextPage}
+              hasPreviousPage={photoPage.hasPreviousPage}
+              hrefForPage={(nextPage) => galleryPageHref(nextPage, columns, isPreview)}
+            />
           )}
         </section>
       </main>
