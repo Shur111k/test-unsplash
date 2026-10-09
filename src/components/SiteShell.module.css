@@ -31,6 +31,10 @@
   letter-spacing: -0.11em;
   line-height: 1;
 }
+.logo {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
 .logo span {
   display: inline-block;
   margin-left: 3px;
@@ -87,6 +91,26 @@
 .headerLink:hover span {
   transform: translate(3px, -3px);
 }
+.galleryInactive {
+  border-bottom-color: transparent;
+}
+.profileLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 0;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+.profileLink span:first-child {
+  color: #708d1c;
+  font-size: 26px;
+  line-height: 0.8;
+}
+.profileLink[aria-current="page"] {
+  border-bottom: 2px solid #708d1c;
+}
 .footer {
   margin-top: clamp(80px, 10vw, 150px);
   border-top: 1px solid var(--line);
@@ -120,10 +144,17 @@
     display: none;
   }
   .headerNav {
-    gap: 19px;
+    gap: 12px;
   }
   .searchText {
     display: none;
+  }
+  .profileText {
+    display: none;
+  }
+  .profileLink[aria-current="page"] .profileText {
+    display: inline;
+    font-size: 11px;
   }
   .headerLink {
     gap: 7px;
@@ -135,5 +166,10 @@
     flex-direction: column;
     justify-content: center;
     gap: 12px;
+  }
+}
+@media (max-width: 380px) {
+  .headerLink span {
+    display: none;
   }
 }

@@ -5,9 +5,11 @@ import styles from "./SiteShell.module.css";
 export function SiteShell({
   children,
   preview = false,
+  profileActive = false,
 }: {
   children: ReactNode;
   preview?: boolean;
+  profileActive?: boolean;
 }) {
   const homeHref = preview ? "/?preview=1" : "/";
   const galleryHref = preview ? "/?preview=1#gallery" : "/#gallery";
@@ -40,8 +42,22 @@ export function SiteShell({
               </span>
               <span className={styles.searchText}>Пошук</span>
             </Link>
-            <Link className={styles.headerLink} href={galleryHref} prefetch={false}>
+            <Link
+              className={`${styles.headerLink} ${profileActive ? styles.galleryInactive : ""}`}
+              href={galleryHref}
+              prefetch={false}
+            >
               Колекція <span aria-hidden="true">↗</span>
+            </Link>
+            <Link
+              className={styles.profileLink}
+              href="/profile"
+              prefetch={false}
+              aria-label="Профіль"
+              aria-current={profileActive ? "page" : undefined}
+            >
+              <span aria-hidden="true">◎</span>
+              <span className={styles.profileText}>Профіль</span>
             </Link>
           </nav>
         </div>
