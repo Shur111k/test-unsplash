@@ -307,6 +307,34 @@
   background: var(--accent);
 }
 
+.savedGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 16px;
+  margin-top: 28px;
+}
+
+.savedPagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  margin-top: 34px;
+  font-size: 13px;
+}
+
+.savedPagination a {
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+.savedPagination a:hover {
+  text-decoration: underline;
+}
+.savedPagination span {
+  color: var(--muted);
+}
+
 @media (max-width: 850px) {
   .hero {
     grid-template-columns: minmax(0, 1fr) 220px;
@@ -326,6 +354,9 @@
 }
 
 @media (max-width: 640px) {
+  .savedGrid {
+    grid-template-columns: 1fr;
+  }
   .breadcrumbs {
     font-size: 11px;
   }

@@ -1,9 +1,20 @@
 import type { Photo } from "@/lib/photos";
 import { Attribution } from "./Attribution";
 import { PhotoLink } from "./PhotoLink";
+import { SavePhotoButton } from "./SavePhotoButton";
 import styles from "./PhotoCard.module.css";
 
-export function PhotoCard({ photo, index }: { photo: Photo; index: number }) {
+export function PhotoCard({
+  photo,
+  index,
+  signedIn,
+  saved,
+}: {
+  photo: Photo;
+  index: number;
+  signedIn: boolean;
+  saved: boolean;
+}) {
   return (
     <article className={styles.card}>
       <PhotoLink
@@ -28,6 +39,14 @@ export function PhotoCard({ photo, index }: { photo: Photo; index: number }) {
           ↗
         </span>
       </PhotoLink>
+      <div className={styles.saveButton}>
+        <SavePhotoButton
+          key={`${photo.id}:${saved}`}
+          photo={photo}
+          signedIn={signedIn}
+          initiallySaved={saved}
+        />
+      </div>
       <div className={styles.cardMeta}>
         <Attribution photo={photo} compact />
         <span className={styles.cardNumber} aria-hidden="true">

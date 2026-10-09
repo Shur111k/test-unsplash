@@ -61,6 +61,9 @@ export function safeGalleryReturnHref(value: QueryValue, preview: boolean): stri
     if (url.origin !== "https://mira.local" || value.includes("\\")) return fallback;
     const tagMatch = /^\/tags\/([^/]+)$/.exec(url.pathname);
     const isSearch = url.pathname === "/search";
+    if (url.pathname === "/profile") {
+      return `/profile?page=${parseGalleryPage(url.searchParams.get("page") ?? undefined)}#saved`;
+    }
     if (url.pathname !== "/" && !tagMatch && !isSearch) return fallback;
     const tag = tagMatch ? decodeURIComponent(tagMatch[1]).trim() : null;
     if (tagMatch && !tag) return fallback;

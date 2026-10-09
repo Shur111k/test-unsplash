@@ -17,8 +17,12 @@ export function getAppOrigin() {
   if (!configured) throw new Error("APP_ORIGIN is not configured.");
 
   const origin = new URL(configured);
-  if (origin.protocol !== "https:" && origin.hostname !== "localhost") {
-    throw new Error("APP_ORIGIN must use HTTPS.");
+  const localDevelopment =
+    process.env.NODE_ENV !== "production" &&
+    origin.protocol === "http:" &&
+    origin.hostname === "localhost";
+  if (origin.protocol !== "https:" && !localDevelopment) {
+    throw new Error("APP_ORIGIN must use HTTPS in production.");
   }
 
   return origin.origin;

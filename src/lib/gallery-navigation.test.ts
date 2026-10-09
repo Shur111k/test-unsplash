@@ -67,6 +67,11 @@ describe("gallery URL state", () => {
     expect(safeGalleryReturnHref("/search?q=%20%20", true)).toBe(galleryPageHref(1, 3, true));
   });
 
+  it("returns saved photos to the profile without accepting an external destination", () => {
+    expect(safeGalleryReturnHref("/profile?page=2#saved", false)).toBe("/profile?page=2#saved");
+    expect(safeGalleryReturnHref("//evil.test/profile", false)).toBe(galleryPageHref(1, 3, false));
+  });
+
   it("rejects external, malformed and unrelated return destinations", () => {
     for (const href of [
       "https://evil.test",

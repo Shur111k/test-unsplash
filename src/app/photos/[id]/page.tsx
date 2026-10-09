@@ -5,6 +5,7 @@ import { connection } from "next/server";
 import { Attribution } from "@/components/Attribution";
 import { PhotoDetails } from "@/components/PhotoDetails";
 import { RetryButton } from "@/components/RetryButton";
+import { SavePhotoButton } from "@/components/SavePhotoButton";
 import { SiteShell } from "@/components/SiteShell";
 import {
   parseGalleryColumns,
@@ -12,6 +13,7 @@ import {
   type QueryValue,
 } from "@/lib/gallery-navigation";
 import { previewPhotos } from "@/lib/preview-photos";
+import { getSavedPhotoIds } from "@/lib/saved-photos";
 import { photoErrorMessage } from "@/lib/unsplash/error-message";
 import { getPhotoById } from "@/lib/unsplash/server";
 import styles from "./page.module.css";
@@ -22,7 +24,7 @@ interface PhotoPageProps {
 }
 
 function isPreviewPhoto(id: string, preview: QueryValue): boolean {
-  return process.env.NODE_ENV === "development" && (id.startsWith("preview-") || preview === "1");
+  return id.startsWith("preview-") || (process.env.NODE_ENV === "development" && preview === "1");
 }
 
 export async function generateMetadata({
@@ -76,6 +78,7 @@ export default async function PhotoPage({ params, searchParams }: PhotoPageProps
   }
 
   if (!photo) notFound();
+  const saved = await getSavedPhotoIds([photo]);
 
   return (
     <SiteShell preview={isPreview}>
@@ -90,7 +93,17 @@ export default async function PhotoPage({ params, searchParams }: PhotoPageProps
               Погляньте ближче<span>.</span>
             </h1>
           </div>
-          <p>Один кадр. Цілий світ.</p>
+          <div className={styles.headingAside}>
+            <p>Один кадр. Цілий світ.</p>
+            <div className={styles.saveControl}>
+              <span>У мою добірку</span>
+              <SavePhotoButton
+                photo={photo}
+                signedIn={saved.signedIn}
+                initiallySaved={saved.ids.includes(photo.id)}
+              />
+            </div>
+          </div>
         </div>
         <figure className={styles.figure}>
           {/* Keep the direct Unsplash image URL visible in the browser. */}

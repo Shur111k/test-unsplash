@@ -4,8 +4,17 @@ import { getPhotoLayouts } from "@/lib/photo-layout";
 import { PhotoCard } from "./PhotoCard";
 import styles from "./PhotoGrid.module.css";
 
-export function PhotoGrid({ photos }: { photos: Photo[] }) {
+export function PhotoGrid({
+  photos,
+  savedIds,
+  signedIn,
+}: {
+  photos: Photo[];
+  savedIds: string[];
+  signedIn: boolean;
+}) {
   const layouts = getPhotoLayouts(photos);
+  const savedSet = new Set(savedIds);
 
   return (
     <div className={styles.grid}>
@@ -20,7 +29,12 @@ export function PhotoGrid({ photos }: { photos: Photo[] }) {
 
         return (
           <div className={styles.item} key={photo.id} style={style}>
-            <PhotoCard photo={photo} index={index} />
+            <PhotoCard
+              photo={photo}
+              index={index}
+              signedIn={signedIn}
+              saved={savedSet.has(photo.id)}
+            />
           </div>
         );
       })}

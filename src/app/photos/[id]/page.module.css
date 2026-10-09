@@ -37,12 +37,24 @@
 .heading h1 span {
   color: #9bb937;
 }
-.heading > p {
+.headingAside > p {
   margin: 0 0 5px;
   color: var(--muted);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 19px;
   font-style: italic;
+}
+.headingAside {
+  display: grid;
+  justify-items: end;
+  gap: 14px;
+}
+.saveControl {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 12px;
 }
 .figure {
   margin: 0;
@@ -93,6 +105,9 @@
   .heading {
     align-items: start;
     flex-direction: column;
+  }
+  .headingAside {
+    justify-items: start;
   }
   .figure figcaption {
     align-items: start;

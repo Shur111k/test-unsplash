@@ -1,9 +1,21 @@
 import Link from "next/link";
 import { SiteShell } from "@/components/SiteShell";
 import { logoutAction } from "@/lib/auth/actions";
+import type { SavedPhoto } from "@/lib/saved-photos";
+import { SAVED_PAGE_SIZE } from "@/lib/saved-photos";
+import { SavedPhotoCard } from "./SavedPhotoCard";
 import styles from "./page.module.css";
 
-export function ProfileDashboard({ email }: { email: string }) {
+export function ProfileDashboard({
+  email,
+  saved,
+  page,
+}: {
+  email: string;
+  saved: { photos: SavedPhoto[]; total: number };
+  page: number;
+}) {
+  const totalPages = Math.ceil(saved.total / SAVED_PAGE_SIZE);
   return (
     <SiteShell profileActive>
       <main id="main-content" tabIndex={-1} className={`site-container ${styles.main}`}>
@@ -71,18 +83,55 @@ export function ProfileDashboard({ email }: { email: string }) {
                 <p className={styles.sectionKicker}>02 / Особиста добірка</p>
                 <h2 id="saved-title">Збережені фото</h2>
               </div>
-              <span className={styles.photoCount}>0 фото</span>
+              <span className={styles.photoCount}>{saved.total} фото</span>
             </div>
-            <div className={styles.empty}>
-              <span className={styles.emptySymbol} aria-hidden="true">
-                ◎
-              </span>
-              <h3>Тут поки немає фото</h3>
-              <p>Переглянь галерею та знайди кадри, які захочеться зберегти для себе.</p>
-              <Link href="/#gallery" prefetch={false}>
-                Переглянути галерею <span aria-hidden="true">↗</span>
-              </Link>
-            </div>
+            {saved.photos.length > 0 ? (
+              <>
+                <div className={styles.savedGrid}>
+                  {saved.photos.map((photo) => (
+                    <SavedPhotoCard key={photo.photo_id} photo={photo} page={page} />
+                  ))}
+                </div>
+                {totalPages > 1 && (
+                  <nav className={styles.savedPagination} aria-label="Сторінки збережених фото">
+                    {page > 1 && (
+                      <Link href={`/profile?page=${page - 1}#saved`} prefetch={false}>
+                        ← Попередня
+                      </Link>
+                    )}
+                    <span>
+                      {page} / {totalPages}
+                    </span>
+                    {page < totalPages && (
+                      <Link href={`/profile?page=${page + 1}#saved`} prefetch={false}>
+                        Наступна →
+                      </Link>
+                    )}
+                  </nav>
+                )}
+              </>
+            ) : (
+              <div className={styles.empty}>
+                <span className={styles.emptySymbol} aria-hidden="true">
+                  ◎
+                </span>
+                <h3>{saved.total > 0 ? "На цій сторінці немає фото" : "Тут поки немає фото"}</h3>
+                <p>
+                  {saved.total > 0
+                    ? "Поверніться до попередньої сторінки добірки."
+                    : "Переглянь галерею та знайди кадри, які захочеться зберегти для себе."}
+                </p>
+                <Link
+                  href={
+                    saved.total > 0 ? `/profile?page=${Math.max(1, page - 1)}#saved` : "/#gallery"
+                  }
+                  prefetch={false}
+                >
+                  {saved.total > 0 ? "Попередня сторінка" : "Переглянути галерею"}{" "}
+                  <span aria-hidden="true">↗</span>
+                </Link>
+              </div>
+            )}
           </section>
         </div>
       </main>

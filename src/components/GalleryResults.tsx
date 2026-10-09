@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { galleryPageHref, type GalleryColumns } from "@/lib/gallery-navigation";
 import type { PhotoPage } from "@/lib/photos";
+import { getSavedPhotoIds } from "@/lib/saved-photos";
 import { GalleryLayout } from "./GalleryLayout";
 import { Pagination } from "./Pagination";
 import { PhotoGrid } from "./PhotoGrid";
@@ -17,7 +18,7 @@ interface GalleryResultsProps {
   searchQuery?: string;
 }
 
-export function GalleryResults({
+export async function GalleryResults({
   photoPage,
   errorMessage,
   page,
@@ -74,6 +75,8 @@ export function GalleryResults({
     );
   }
 
+  const { signedIn, ids } = await getSavedPhotoIds(photoPage.photos);
+
   return (
     <GalleryLayout
       key={`${pathname}:${searchQuery ?? ""}:${page}:${columns}`}
@@ -87,7 +90,7 @@ export function GalleryResults({
       pathname={pathname}
       searchQuery={searchQuery}
     >
-      <PhotoGrid photos={photoPage.photos} />
+      <PhotoGrid photos={photoPage.photos} savedIds={ids} signedIn={signedIn} />
     </GalleryLayout>
   );
 }
